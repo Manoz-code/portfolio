@@ -1,0 +1,85 @@
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(
+      circle at 50% 45%,
+      rgba(97, 231, 255, 0.07),
+      transparent 30%
+    ),
+    #07090c;
+  transition:
+    opacity 0.85s ease,
+    visibility 0.85s ease;
+}
+
+.loading-leave {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.loading-content {
+  width: min(420px, calc(100vw - 48px));
+}
+
+.loading-brand {
+  margin-bottom: 70px;
+  color: var(--text);
+  font-family: "DM Mono", monospace;
+  font-size: 1.15rem;
+  letter-spacing: 0.28em;
+}
+
+.loading-brand span {
+  color: var(--cyan);
+}
+
+.loading-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  color: var(--muted);
+  font-family: "DM Mono", monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+}
+
+.loading-status strong {
+  color: var(--text);
+  font-weight: 400;
+}
+
+.loading-track {
+  width: 100%;
+  height: 2px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.loading-progress {
+  height: 100%;
+  background: var(--cyan);
+  box-shadow: 0 0 18px rgba(97, 231, 255, 0.65);
+  transition: width 0.12s ease;
+}
+
+.loading-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 14px;
+  color: #4f5968;
+  font-family: "DM Mono", monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+}
+
+@media (max-width: 600px) {
+  .loading-brand {
+    margin-bottom: 48px;
+  }
+}
