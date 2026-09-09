@@ -31,13 +31,27 @@ export default function Contact() {
               digital products.
             </p>
 
-            <a
-              href="mailto:hello@manoz.dev"
-              className="contact-button"
-            >
-              Get in touch
-              <span>↗</span>
-            </a>
+            <div className="contact-actions">
+
+              <a
+                href="mailto:kunwarmanoz434@gmail.com"
+                className="contact-button"
+              >
+                Get in touch
+                <span>↗</span>
+              </a>
+
+              <a
+                href="https://github.com/Manoz-code"
+                className="contact-button contact-github"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                GitHub
+                <span>↗</span>
+              </a>
+
+            </div>
 
           </div>
 

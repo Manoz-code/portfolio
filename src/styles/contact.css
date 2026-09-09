@@ -154,3 +154,36 @@
     font-size: 42px;
   }
 }
+
+/* =========================
+   CONTACT ACTIONS
+========================= */
+
+.contact-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.contact-github {
+  background: rgba(255,255,255,.025);
+  border-color: rgba(255,255,255,.14);
+}
+
+.contact-github:hover {
+  background: rgba(255,255,255,.07);
+  border-color: rgba(255,255,255,.32);
+}
+
+@media (max-width: 700px) {
+  .contact-actions {
+    width: 100%;
+  }
+
+  .contact-actions .contact-button {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
