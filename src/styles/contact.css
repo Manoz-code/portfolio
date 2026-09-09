@@ -187,3 +187,31 @@
   }
 }
 
+
+/* =========================
+   GITHUB BUTTON - VISIBILITY
+========================= */
+
+.contact-github {
+  color: #f4f7fb;
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.28);
+  box-shadow:
+    0 8px 24px rgba(0,0,0,.18),
+    inset 0 0 0 1px rgba(255,255,255,.025);
+}
+
+.contact-github:hover {
+  color: #ffffff;
+  background: rgba(255,255,255,.12);
+  border-color: rgba(97,231,255,.55);
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.25),
+    0 0 22px rgba(97,231,255,.08);
+  transform: translateY(-2px);
+}
+
+.contact-github span {
+  color: var(--cyan);
+}
+
