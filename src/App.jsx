@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import Navbar from "./components/Navbar";
+import LoadingScreen from "./components/LoadingScreen";
 import Hero from "./components/Hero";
 import About from "./sections/About";
 import Skills from "./sections/Skills";
@@ -19,9 +20,7 @@ function useReveal() {
           }
         });
       },
-      {
-        threshold: 0.12,
-      }
+      { threshold: 0.12 }
     );
 
     elements.forEach((element) => observer.observe(element));
@@ -35,6 +34,7 @@ export default function App() {
 
   return (
     <>
+      <LoadingScreen />
       <Navbar />
 
       <main>
@@ -47,6 +47,7 @@ export default function App() {
         <div className="reveal">
           <Skills />
         </div>
+
 
         <div className="reveal">
           <Projects />

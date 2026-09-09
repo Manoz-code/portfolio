@@ -1,116 +1,190 @@
-.navbar {
+.site-nav {
   position: fixed;
-  z-index: 100;
   top: 0;
   left: 0;
-  width: 100%;
+  right: 0;
 
-  padding: 22px 0;
+  z-index: 1000;
 
-  transition:
-    background .3s ease,
-    backdrop-filter .3s ease,
-    border-color .3s ease;
-}
+  border-bottom: 1px solid rgba(255,255,255,.07);
 
-.navbar-scrolled {
-  background: rgba(7,9,12,.72);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(5,7,10,.90),
+      rgba(5,7,10,.68)
+    );
+
   backdrop-filter: blur(18px);
-  border-bottom: 1px solid var(--border);
 }
 
-.navbar-inner {
+.nav-inner {
+  width: min(1280px, calc(100% - 96px));
+  height: 86px;
+  margin: auto;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.logo {
-  font-family: "DM Mono", monospace;
-  font-size: 17px;
-  font-weight: 500;
-  letter-spacing: .08em;
+.nav-logo {
+  color: #f5f7fa;
+
+  font-size: 27px;
+  font-weight: 800;
+  letter-spacing: .22em;
 }
 
-.logo span {
-  color: var(--cyan);
-}
-
-.navbar nav {
+.desktop-nav {
   display: flex;
-  gap: 34px;
+  align-items: center;
+  gap: 52px;
+
+  margin-left: auto;
+  margin-right: 70px;
 }
 
-.navbar nav a {
-  color: var(--muted);
-  font-size: 13px;
-  transition: color .2s ease;
-}
+.desktop-nav a {
+  position: relative;
 
-.navbar nav a:hover {
-  color: var(--text);
-}
+  color: #a9b1bd;
 
-.nav-contact {
-  padding: 10px 15px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-
-  font-size: 12px;
-  font-family: "DM Mono", monospace;
+  font-size: 14px;
 
   transition:
-    border-color .2s ease,
-    background .2s ease;
+    color .2s ease;
 }
 
-.nav-contact:hover {
-  border-color: rgba(97,231,255,.4);
-  background: rgba(97,231,255,.06);
-}
-
-.nav-contact span {
-  color: var(--cyan);
-}
-
-@media (max-width: 700px) {
-  .navbar nav {
-    display: none;
-  }
-
-  .nav-contact {
-    padding: 8px 11px;
-  }
-}
-
-.navbar nav a {
-  position: relative;
-}
-
-.navbar nav a::after {
+.desktop-nav a::after {
   content: "";
 
   position: absolute;
   left: 0;
-  bottom: -7px;
+  bottom: -8px;
 
-  width: 100%;
+  width: 0;
   height: 1px;
 
   background: var(--cyan);
 
-  transform: scaleX(0);
-  transform-origin: right;
-
-  transition: transform .25s ease;
+  transition: width .25s ease;
 }
 
-.navbar nav a:hover::after,
-.navbar nav a.active::after {
-  transform: scaleX(1);
-  transform-origin: left;
+.desktop-nav a:hover {
+  color: #fff;
 }
 
-.navbar nav a.active {
-  color: var(--text);
+.desktop-nav a:hover::after {
+  width: 100%;
+}
+
+.nav-talk {
+  padding: 13px 23px;
+
+  border: 1px solid rgba(255,255,255,.25);
+  border-radius: 999px;
+
+  color: #f4f7fb;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  transition:
+    background .25s ease,
+    border-color .25s ease,
+    transform .25s ease;
+}
+
+.nav-talk:hover {
+  border-color: var(--cyan);
+  background: rgba(97,231,255,.06);
+  transform: translateY(-2px);
+}
+
+.mobile-menu,
+.mobile-nav {
+  display: none;
+}
+
+@media (max-width: 900px) {
+
+  .nav-inner {
+    width: calc(100% - 32px);
+    height: 72px;
+  }
+
+  .desktop-nav,
+  .nav-talk {
+    display: none;
+  }
+
+  .nav-logo {
+    font-size: 21px;
+  }
+
+  .mobile-menu {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 50%;
+
+    background: transparent;
+  }
+
+  .mobile-menu span {
+    display: block;
+    width: 16px;
+    height: 1px;
+
+    background: #fff;
+
+    transition:
+      transform .25s ease;
+  }
+
+  .nav-open .mobile-menu span:first-child {
+    transform: translateY(3.5px) rotate(45deg);
+  }
+
+  .nav-open .mobile-menu span:last-child {
+    transform: translateY(-3.5px) rotate(-45deg);
+  }
+
+  .mobile-nav {
+    padding: 22px 16px 28px;
+
+    flex-direction: column;
+    gap: 3px;
+
+    border-top: 1px solid rgba(255,255,255,.06);
+
+    background: rgba(5,7,10,.96);
+  }
+
+  .nav-open .mobile-nav {
+    display: flex;
+  }
+
+  .mobile-nav a {
+    padding: 15px 8px;
+
+    color: #b9c1cd;
+
+    font-size: 16px;
+
+    border-bottom: 1px solid rgba(255,255,255,.06);
+  }
+
+  .mobile-nav a:last-child {
+    color: var(--cyan);
+    border-bottom: 0;
+  }
 }

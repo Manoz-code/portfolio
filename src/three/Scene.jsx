@@ -119,45 +119,55 @@ function CameraParallax() {
   const { camera, pointer } = useThree();
 
   const smooth = useRef({
-    scroll: 0,
     x: 0,
     y: 1,
     z: 6,
   });
 
   useFrame(() => {
+    const isMobile = window.innerWidth <= 700;
+
     const maxScroll =
       document.documentElement.scrollHeight - window.innerHeight;
 
-    const scroll = maxScroll > 0
-      ? THREE.MathUtils.clamp(window.scrollY / maxScroll, 0, 1)
-      : 0;
+    const scroll =
+      maxScroll > 0
+        ? THREE.MathUtils.clamp(
+            window.scrollY / maxScroll,
+            0,
+            1
+          )
+        : 0;
 
-    /*
-      Strong cinematic movement.
+    let targetX;
+    let targetY;
+    let targetZ;
 
-      Scroll:
-      - moves camera forward
-      - moves camera sideways
-      - raises camera
-      - adds a small cinematic tilt
+    if (isMobile) {
+      targetX =
+        Math.sin(scroll * Math.PI) * 0.35;
 
-      Mouse:
-      - adds independent parallax
-    */
+      targetY =
+        1.0 +
+        scroll * 0.35;
 
-    const targetX =
-      Math.sin(scroll * Math.PI * 2) * 1.5 +
-      pointer.x * 0.65;
+      targetZ =
+        7.2 -
+        scroll * 0.8;
+    } else {
+      targetX =
+        Math.sin(scroll * Math.PI * 2) * 1.5 +
+        pointer.x * 0.65;
 
-    const targetY =
-      1 +
-      scroll * 0.9 +
-      pointer.y * 0.3;
+      targetY =
+        1 +
+        scroll * 0.9 +
+        pointer.y * 0.3;
 
-    const targetZ =
-      6 -
-      scroll * 2.5;
+      targetZ =
+        6 -
+        scroll * 2.5;
+    }
 
     smooth.current.x = THREE.MathUtils.lerp(
       smooth.current.x,
@@ -183,13 +193,19 @@ function CameraParallax() {
 
     camera.rotation.z = THREE.MathUtils.lerp(
       camera.rotation.z,
-      -scroll * 0.045 + pointer.x * 0.018,
+      isMobile
+        ? 0
+        : -scroll * 0.045 + pointer.x * 0.018,
       0.04
     );
 
     camera.lookAt(
-      Math.sin(scroll * Math.PI * 2) * 0.35,
-      0.65 + scroll * 0.3,
+      isMobile
+        ? 0.25
+        : Math.sin(scroll * Math.PI * 2) * 0.35,
+      isMobile
+        ? 0.75
+        : 0.65 + scroll * 0.3,
       0
     );
   });
@@ -199,7 +215,10 @@ function CameraParallax() {
 
 function Particles() {
   const particles = useRef();
-  const count = 180;
+  const count =
+    typeof window !== "undefined" && window.innerWidth <= 700
+      ? 70
+      : 180;
 
   const positions = new Float32Array(count * 3);
 
@@ -249,6 +268,200 @@ function Particles() {
 /* =========================================================
    WORKSTATION
    ========================================================= */
+
+
+function HolographicPanel({
+  position = [0, 0, 0],
+  rotation = [0, 0, 0],
+  scale = [1, 1, 1],
+}) {
+  const group = useRef();
+
+  useFrame((state) => {
+    if (!group.current) return;
+
+    const t = state.clock.elapsedTime;
+
+    group.current.position.y =
+      position[1] + Math.sin(t * 1.2 + position[0]) * 0.035;
+
+    group.current.rotation.y =
+      rotation[1] + Math.sin(t * 0.7) * 0.025;
+  });
+
+  return (
+    <group
+      ref={group}
+      position={position}
+      rotation={rotation}
+      scale={scale}
+    >
+      {/* Main holographic screen */}
+      <mesh>
+        <planeGeometry args={[2.8, 1.65]} />
+        <meshBasicMaterial
+          color="#61e7ff"
+          transparent
+          opacity={0.055}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+
+      {/* Screen frame */}
+      <lineSegments>
+        <edgesGeometry
+          args={[new THREE.PlaneGeometry(2.8, 1.65)]}
+        />
+        <lineBasicMaterial
+          color="#61e7ff"
+          transparent
+          opacity={0.5}
+        />
+      </lineSegments>
+
+      {/* Horizontal scan lines */}
+      {Array.from({ length: 7 }).map((_, i) => (
+        <mesh
+          key={i}
+          position={[
+            0,
+            0.58 - i * 0.18,
+            0.015,
+          ]}
+        >
+          <planeGeometry args={[2.35, 0.008]} />
+          <meshBasicMaterial
+            color="#61e7ff"
+            transparent
+            opacity={0.18}
+          />
+        </mesh>
+      ))}
+
+      {/* Data bars */}
+      {Array.from({ length: 5 }).map((_, i) => (
+        <mesh
+          key={`bar-${i}`}
+          position={[
+            -0.85 + i * 0.42,
+            -0.57,
+            0.018,
+          ]}
+        >
+          <planeGeometry
+            args={[
+              0.25,
+              0.08 + (i % 3) * 0.04,
+            ]}
+          />
+          <meshBasicMaterial
+            color="#5b8cff"
+            transparent
+            opacity={0.55}
+          />
+        </mesh>
+      ))}
+
+      {/* Corner markers */}
+      {[
+        [-1.3, 0.72],
+        [1.3, 0.72],
+        [-1.3, -0.72],
+        [1.3, -0.72],
+      ].map(([x, y], i) => (
+        <mesh
+          key={`corner-${i}`}
+          position={[x, y, 0.02]}
+        >
+          <boxGeometry args={[0.08, 0.08, 0.015]} />
+          <meshBasicMaterial color="#61e7ff" />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
+
+function EnergyCore() {
+  const group = useRef();
+
+  useFrame((state) => {
+    if (!group.current) return;
+
+    const t = state.clock.elapsedTime;
+
+    group.current.rotation.x = t * 0.25;
+    group.current.rotation.y = t * 0.42;
+
+    const pulse =
+      1 + Math.sin(t * 2.2) * 0.08;
+
+    group.current.scale.setScalar(pulse);
+  });
+
+  return (
+    <group ref={group} position={[0, 1.65, 0]}>
+      <mesh>
+        <icosahedronGeometry args={[0.28, 2]} />
+        <meshBasicMaterial
+          color="#61e7ff"
+          wireframe
+        />
+      </mesh>
+
+      <mesh>
+        <sphereGeometry args={[0.11, 24, 24]} />
+        <meshBasicMaterial color="#ffffff" />
+      </mesh>
+
+      <pointLight
+        color="#61e7ff"
+        intensity={3}
+        distance={4}
+      />
+    </group>
+  );
+}
+
+
+function AmbientOrbs() {
+  const group = useRef();
+
+  useFrame((state) => {
+    if (!group.current) return;
+
+    const t = state.clock.elapsedTime;
+
+    group.current.rotation.y = t * 0.04;
+  });
+
+  const orbs = [
+    [-3.4, 2.1, -1.5, 0.08],
+    [3.2, 2.8, -2.0, 0.06],
+    [-2.7, 0.5, -2.5, 0.05],
+    [2.8, 0.8, -1.8, 0.07],
+    [1.9, 3.2, -3.0, 0.045],
+  ];
+
+  return (
+    <group ref={group}>
+      {orbs.map(([x, y, z, size], i) => (
+        <mesh
+          key={i}
+          position={[x, y, z]}
+        >
+          <sphereGeometry args={[size, 12, 12]} />
+          <meshBasicMaterial
+            color="#61e7ff"
+            transparent
+            opacity={0.75}
+          />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
 
 function Workstation() {
   const desk = useRef();
@@ -548,8 +761,6 @@ function SceneContent() {
 
       <CameraParallax />
 
-      <TestCharacter />
-
       <Workstation />
 
       <Hologram />
@@ -586,7 +797,12 @@ export default function Scene() {
         position: [0, 1, 6],
         fov: 45,
       }}
-      dpr={[1, 2]}
+      dpr={
+        typeof window !== "undefined" &&
+        window.innerWidth <= 700
+          ? [1, 1.25]
+          : [1, 2]
+      }
       gl={{
         antialias: true,
         powerPreference: "high-performance",
