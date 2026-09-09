@@ -478,3 +478,243 @@
     0 0 20px rgba(97,231,255,.07);
 }
 
+/* =====================================================
+   PROJECT VIDEO
+===================================================== */
+
+.project-video {
+  cursor: pointer;
+}
+
+.project-video-landscape {
+  aspect-ratio: 16 / 9;
+}
+
+.project-video-portrait {
+  width: min(100%, 390px);
+  aspect-ratio: 9 / 16;
+  margin-inline: auto;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+/* =====================================================
+   FULLSCREEN VIDEO VIEWER
+===================================================== */
+
+.video-lightbox {
+  position: fixed !important;
+  inset: 0 !important;
+
+  width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+
+  z-index: 999999 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  padding: 24px;
+  overflow: hidden;
+
+  box-sizing: border-box;
+
+  background: rgba(3, 5, 8, .94);
+
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+
+  animation: video-lightbox-in .25s ease-out;
+}
+
+.video-lightbox-content {
+  position: relative !important;
+
+  width: min(1100px, 92vw);
+  max-width: 1100px;
+  max-height: calc(100dvh - 48px);
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 12px;
+
+  box-sizing: border-box;
+
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 16px;
+
+  background: rgba(10, 13, 18, .97);
+
+  box-shadow:
+    0 35px 120px rgba(0,0,0,.8),
+    0 0 70px rgba(97,231,255,.06);
+
+  animation: video-content-in .35s cubic-bezier(.2,.7,.2,1);
+}
+
+.video-lightbox-video {
+  display: block;
+
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+
+  max-height: calc(100dvh - 125px);
+
+  object-fit: contain;
+
+  border-radius: 10px;
+  background: #05070a;
+}
+
+/* AquaFlow phone recording */
+.video-lightbox-content:has(
+  .video-lightbox-video[src*="aquaflow-demo"]
+) {
+  width: min(460px, 88vw);
+}
+
+.video-lightbox-content:has(
+  .video-lightbox-video[src*="aquaflow-demo"]
+) .video-lightbox-video {
+  width: auto;
+  max-width: 100%;
+  height: min(78dvh, 760px);
+}
+
+/* Close */
+.video-lightbox-close {
+  position: absolute;
+
+  top: -15px;
+  right: -15px;
+
+  z-index: 10;
+
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(255,255,255,.24);
+  border-radius: 50%;
+
+  background: rgba(10,13,18,.98);
+  color: #fff;
+
+  font-size: 24px;
+  line-height: 1;
+
+  cursor: pointer;
+
+  box-shadow: 0 8px 25px rgba(0,0,0,.5);
+
+  transition:
+    transform .25s ease,
+    border-color .25s ease,
+    background .25s ease;
+}
+
+.video-lightbox-close:hover {
+  transform: rotate(90deg);
+  border-color: rgba(97,231,255,.6);
+  background: rgba(255,255,255,.1);
+}
+
+/* Title */
+.video-lightbox-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 12px 4px 2px;
+
+  color: #f4f7fb;
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.video-lightbox-title span {
+  color: var(--muted);
+
+  font-family: "DM Mono", monospace;
+  font-size: 8px;
+  letter-spacing: .14em;
+}
+
+/* Animation */
+@keyframes video-lightbox-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes video-content-in {
+  from {
+    opacity: 0;
+    transform: scale(.94);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Mobile */
+@media (max-width: 700px) {
+  .video-lightbox {
+    padding: 14px;
+  }
+
+  .video-lightbox-content {
+    width: 96vw;
+    max-width: 96vw;
+    max-height: calc(100dvh - 28px);
+    padding: 8px;
+    border-radius: 12px;
+  }
+
+  .video-lightbox-video {
+    max-height: calc(100dvh - 100px);
+    border-radius: 7px;
+  }
+
+  .video-lightbox-content:has(
+    .video-lightbox-video[src*="aquaflow-demo"]
+  ) {
+    width: min(92vw, 390px);
+  }
+
+  .video-lightbox-content:has(
+    .video-lightbox-video[src*="aquaflow-demo"]
+  ) .video-lightbox-video {
+    height: min(78dvh, 680px);
+    max-height: calc(100dvh - 100px);
+  }
+
+  .video-lightbox-close {
+    top: -10px;
+    right: -8px;
+    width: 34px;
+    height: 34px;
+    font-size: 21px;
+  }
+
+  .video-lightbox-title {
+    padding-top: 9px;
+    font-size: 11px;
+  }
+}

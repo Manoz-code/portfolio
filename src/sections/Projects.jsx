@@ -1,3 +1,7 @@
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
+import "../styles/projects.css";
+
 const projects = [
   {
     number: "01",
@@ -31,6 +35,62 @@ const projects = [
 ];
 
 export default function Projects() {
+  const [activeVideo, setActiveVideo] = useState(null);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setActiveVideo(null);
+    };
+
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!activeVideo) return;
+
+    const previousOverflow = document.body.style.overflow;
+
+    document.body.style.overflow = "hidden";
+
+    const handleEscape = (event) => {
+      if (event.key === "Escape") {
+        window.history.back();
+      }
+    };
+
+    window.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleEscape);
+    };
+  }, [activeVideo]);
+
+  const openVideo = (project) => {
+    if (!project.video) return;
+
+    setActiveVideo({
+      src: `${import.meta.env.BASE_URL}videos/${project.video}`,
+      name: project.name,
+    });
+
+    window.history.pushState(
+      { videoOpen: true },
+      "",
+      window.location.href
+    );
+  };
+
+  const closeVideo = () => {
+    if (activeVideo) {
+      window.history.back();
+    }
+  };
+
   return (
     <section className="section projects-section" id="projects">
       <div className="container">
@@ -70,6 +130,7 @@ export default function Projects() {
               <div className="project-main">
 
                 <div className="project-preview">
+
                   {project.video ? (
                     <video
                       className={`project-video ${
@@ -83,6 +144,7 @@ export default function Projects() {
                       loop
                       playsInline
                       preload="metadata"
+                      onClick={() => openVideo(project)}
                     />
                   ) : (
                     <div className="project-preview-placeholder">
@@ -97,6 +159,7 @@ export default function Projects() {
                       LIVE PREVIEW
                     </div>
                   )}
+
                 </div>
 
                 <span className="project-type">
@@ -139,6 +202,43 @@ export default function Projects() {
         </div>
 
       </div>
+
+      {activeVideo &&
+        createPortal(
+          <div
+            className="video-lightbox"
+            onClick={closeVideo}
+          >
+            <div
+              className="video-lightbox-content"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <button
+                className="video-lightbox-close"
+                onClick={closeVideo}
+                aria-label="Close video"
+              >
+                ×
+              </button>
+
+              <video
+                className="video-lightbox-video"
+                src={activeVideo.src}
+                controls
+                autoPlay
+                muted
+                playsInline
+              />
+
+              <div className="video-lightbox-title">
+                {activeVideo.name}
+                <span>PROJECT DEMO</span>
+              </div>
+            </div>
+          </div>,
+          document.body
+        )}
+
     </section>
   );
 }
